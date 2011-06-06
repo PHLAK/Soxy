@@ -78,7 +78,7 @@ case $1 in
     ;;
     'status')
         if [ $(getPid) ]; then
-            echo "SOCKS proxy running on port $(LOCAL_PORT)"
+            echo "SOCKS proxy running on port ${LOCAL_PORT}"
         else 
             echo "SOCKS proxy not currently running"
         fi
