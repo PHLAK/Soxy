@@ -9,6 +9,11 @@ REMOTE_PORT='22'
 
 LOCAL_PORT='1080'
 
+## SCRIPT VARS, DON'T MODIFY
+########################################
+
+DIR=$(dirname $0)
+LOCK_FILE=$DIR/soxy.lock
 
 ## FUNCTIONS
 ########################################
@@ -22,12 +27,12 @@ function getPid {
 }
 
 function startSocks {
-    if [ ! -f soxy.lock ]; then
+    if [ ! -f $LOCK_FILE ]; then
         # Establish SOCKS connection
         nohup ssh -qCD 1080 $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N &
             
         # Create the lock file
-        touch soxy.lock
+        touch $LOCK_FILE
     else
         echo "Socks proxy already running, try running $0 restart"
     fi
@@ -38,8 +43,8 @@ function stopSocks {
     kill $(getPid)
     
     # Remove the PID file
-    if [ -f soxy.lock ]; then
-        rm -f soxy.lock
+    if [ -f $LOCK_FILE ]; then
+        rm -f $LOCK_FILE
     fi
 }
 
