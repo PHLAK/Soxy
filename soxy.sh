@@ -12,8 +12,7 @@ LOCAL_PORT='1080'
 ## SCRIPT VARS, DON'T MODIFY
 ########################################
 
-DIR=$(dirname $0)
-LOCK_FILE=$DIR/soxy.lock
+LOCK_FILE=/tmp/soxy.lock
 
 ## FUNCTIONS
 ########################################
@@ -83,7 +82,7 @@ case $1 in
     ;;
     'status')
         if [ $(getPid) ]; then
-            echo "SOCKS proxy running on port ${LOCAL_PORT}"
+            echo "SOCKS proxy running on port ${LOCAL_PORT} -- PID: $(getPid)"
         else 
             echo "SOCKS proxy not currently running"
         fi
