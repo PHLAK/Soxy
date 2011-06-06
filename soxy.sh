@@ -22,32 +22,24 @@ function getPid {
 }
 
 function startSocks {
-    if [ ! -f soxy.pid ]; then
+    if [ ! -f soxy.lock ]; then
         # Establish SOCKS connection
         nohup ssh -qCD 1080 $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N &
             
-        # Write the PID to soxy.pid
-        echo $(getPid) > soxy.pid
-     else
-        echo "Socks proxy already running"
+        # Create the lock file
+        touch soxy.lock
+    else
+        echo "Socks proxy already running, try running $0 restart"
     fi
 }
 
 function stopSocks {
-
-    # Determine PID
-    if [ -f soxy.pid ]; then
-        PID=$(cat soxy.pid)
-    else
-        PID=$(getPid)
-    fi
-        
     # Kill the process
-    kill $PID
+    kill $(getPid)
     
     # Remove the PID file
-    if [ -f soxy.pid ]; then
-        rm -f soxy.pid
+    if [ -f soxy.lock ]; then
+        rm -f soxy.lock
     fi
 }
 
@@ -85,9 +77,13 @@ case $1 in
         echo "DONE!"
     ;;
     'status')
-        cat nohup.out
+        if [ $(getPid) ]; then
+            echo "SOCKS proxy running on port $(LOCAL_PORT)"
+        else 
+            echo "SOCKS proxy not currently running"
+        fi
     ;;
     *)
-        echo "Usage: $0 { start | stop | restart }"
+        echo "Usage: $0 { start | stop | restart | status }"
     ;;
 esac
