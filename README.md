@@ -10,15 +10,16 @@ executable by running:
 
     chmod +x /home/<your_user>/bin/soxy
     
-You will also need to generate an RSA key pair with the following command:
+If you haven't already, you will also need to generate an RSA key pair with the
+following command:
 
     ssh-keygen -t rsa -C "<your_hostname>"
     
-Once complete run `cat /home/<your_user>/.ssh/id_rsa.pub` and copy the output.
+Once complete copy the contents of `/home/<your_user>/.ssh/id_rsa.pub`.
 
 Now log into your proxy server and paste what you just copied into 
-`/home/<server_user>/.ssh/authorized_keys` and make sure the `authorized_keys`
-files permissions are `600`.
+`/home/<server_user>/.ssh/authorized_keys`. Also make sure the `authorized_keys`
+file permissions are set to `600`.
 
 
 Usage
