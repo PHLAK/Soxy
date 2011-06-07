@@ -14,19 +14,19 @@ executable by running:
 Usage
 -----
 
-### Start the SOCKS connection
+**Start the SOCKS connection**
 
     soxy start
     
-### Stop the SOCKS connection
+**Stop the SOCKS connection**
     
     soxy stop
     
-### Restart the SOCKS connection (stops then starts)
+**Restart the SOCKS connection (stops then starts)**
     
     soxy restart
     
-### Get the status of the SOCKS connection
+**Get the status of the SOCKS connection**
     
     soxy status
 
