@@ -82,6 +82,6 @@ case $1 in
         fi
     ;;
     *)
-        echo "Usage: $0 { start | stop | restart | status }"
+        echo "Usage: soxy { start | stop | restart | status }"
     ;;
 esac
