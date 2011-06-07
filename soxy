@@ -14,6 +14,21 @@ LOCAL_PORT='1080'
 
 LOCK_FILE=/tmp/soxy.lock
 
+## COLOR & STYLE VARS, DON'T MODIFY
+########################################
+    
+BLACK="30"
+RED="31"
+GREEN="32"
+YELLOW="33"
+BLUE="34"
+WHITE="37"
+
+NONE="0"
+BOLD="1"
+UNDERLINE="4"
+
+
 ## FUNCTIONS
 ########################################
 
@@ -27,7 +42,7 @@ function getPid {
 
 function startSocks {
     # Echo status message to console
-    echo -n "Starting SOCKS proxy on port ${LOCAL_PORT} ... "
+    echo -n "Starting SOCKS proxy on port ${LOCAL_PORT}    "
         
     if [ ! -f $LOCK_FILE ]; then
         # Establish SOCKS connection
@@ -37,8 +52,9 @@ function startSocks {
         touch $LOCK_FILE
         
         # Echo status message to console
-        echo "DONE!"
+        echo "[ $(colorMsg OK $GREEN $BOLD) ]"
     else
+        echo "[$(colorMsg FAIL $RED $BOLD $BLACK)]"
         echo "Socks proxy already running, try restarting"
     fi
 
@@ -46,7 +62,7 @@ function startSocks {
 
 function stopSocks {
     # Echo status message to console
-    echo -n "Stopping SOCKS proxy ................ "
+    echo -n "Stopping SOCKS proxy                 "
         
     # Kill the process
     kill $(getPid) > /dev/null 2>&1
@@ -57,7 +73,21 @@ function stopSocks {
     fi
     
     # Echo status message to console
-    echo "DONE!"
+    echo "[ $(colorMsg OK $GREEN $BOLD) ]"
+}
+
+function colorMsg {
+    # Get the message value
+    MESSAGE=$1
+    
+    # Get the color and style values
+    COLOR=${2:-$WHITE}  # Defaults to black, if not specified.
+    STYLE=${3:-$NONE}   # Defaults to none, if not specified.
+    BG=${4:-$BLACK}  # Defaults to black, if not specified.
+    
+    # Echo the message with specified colors
+    echo -e "\033[$STYLE;$COLOR;40m${MESSAGE}\033[m"
+    return
 }
 
 
