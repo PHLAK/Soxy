@@ -5,7 +5,7 @@ Created by, [Chris Kankiewicz](http://www.ChrisKankiewicz.com) & [Charles Bock](
 
 Installation
 ------------
-Copy or symlink the `soxy` file to /home/<your_user>/bin/soxy and make sure it's
+Copy or symlink the `soxy` file to `/home/<your_user>/bin/soxy` and make sure it's
 executable by running:
 
     chmod +x /home/<your_user>/bin/soxy
