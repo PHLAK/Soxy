@@ -26,18 +26,27 @@ function getPid {
 }
 
 function startSocks {
+    # Echo status message to console
+    echo -n "Starting SOCKS proxy on port ${LOCAL_PORT} ... "
+        
     if [ ! -f $LOCK_FILE ]; then
         # Establish SOCKS connection
         nohup ssh -qCD 1080 $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N &
             
         # Create the lock file
         touch $LOCK_FILE
+        
+        # Echo status message to console
+        echo "DONE!"
     else
-        echo "Socks proxy already running, try running $0 restart"
+        echo "Socks proxy already running, try restarting"
     fi
 }
 
 function stopSocks {
+    # Echo status message to console
+    echo -n "Stopping SOCKS proxy ... "
+        
     # Kill the process
     kill $(getPid)
     
@@ -45,6 +54,9 @@ function stopSocks {
     if [ -f $LOCK_FILE ]; then
         rm -f $LOCK_FILE
     fi
+    
+    # Echo status message to console
+    echo "DONE!"
 }
 
 
@@ -53,32 +65,14 @@ function stopSocks {
 
 case $1 in
     'start')
-        # Echo status message to console
-        echo -n "Starting SOCKS proxy on port ${LOCAL_PORT} ... "
-        
         startSocks
-        
-        # Echo status message to console
-        echo "DONE!"
     ;;
     'stop')
-        # Echo status message to console
-        echo -n "Stopping SOCKS proxy ... "
-    
         stopSocks
-        
-        # Echo status message to console
-        echo "DONE!"
     ;;
     'restart')
-        # Echo status message to console
-        echo -n "Restarting SOCKS proxy ... "
-        
         stopSocks
         startSocks
-        
-        # Echo status message to console
-        echo "DONE!"
     ;;
     'status')
         if [ $(getPid) ]; then
