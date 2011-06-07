@@ -3,11 +3,10 @@
 ## SET THESE VARIABLES
 ########################################
 
-REMOTE_USER='USER'
-REMOTE_HOST='HOSTNAME'
-REMOTE_PORT='22'
-
-LOCAL_PORT='1080'
+REMOTE_USER='root'
+REMOTE_HOST='carbon.bocksystems.com'
+REMOTE_PORT='443'
+LOCAL_PORT='8080'
 
 ## SCRIPT VARS, DON'T MODIFY
 ########################################
@@ -31,16 +30,17 @@ function startSocks {
         
     if [ ! -f $LOCK_FILE ]; then
         # Establish SOCKS connection
-        nohup ssh -qCD 1080 $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N &
+        ssh -qfCD 8080 $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N & > /dev/null 2>&1
             
         # Create the lock file
         touch $LOCK_FILE
-        
-        # Echo status message to console
-        echo "DONE!"
+
     else
         echo "Socks proxy already running, try restarting"
     fi
+
+    # Echo status message to console
+    echo "Proxy started"
 }
 
 function stopSocks {
@@ -48,7 +48,7 @@ function stopSocks {
     echo -n "Stopping SOCKS proxy ... "
         
     # Kill the process
-    kill $(getPid)
+    kill $(getPid) > /dev/null 2>&1
     
     # Remove the PID file
     if [ -f $LOCK_FILE ]; then
@@ -56,7 +56,7 @@ function stopSocks {
     fi
     
     # Echo status message to console
-    echo "DONE!"
+    echo "Proxy stopped"
 }
 
 
