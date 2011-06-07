@@ -13,6 +13,7 @@ LOCAL_PORT='1080'
 ########################################
 
 LOCK_FILE=/tmp/soxy.lock
+LOG_FILE=/tmp/soxy.log
 
 ## FUNCTIONS
 ########################################
@@ -31,7 +32,7 @@ function startSocks {
         
     if [ ! -f $LOCK_FILE ]; then
         # Establish SOCKS connection
-        nohup ssh -qCD 1080 $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N &
+        nohup ssh -qCD 1080 $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N & > $LOG_FILE
             
         # Create the lock file
         touch $LOCK_FILE
@@ -45,7 +46,7 @@ function startSocks {
 
 function stopSocks {
     # Echo status message to console
-    echo -n "Stopping SOCKS proxy ... "
+    echo -n "Stopping SOCKS proxy ................ "
         
     # Kill the process
     kill $(getPid)
@@ -82,6 +83,6 @@ case $1 in
         fi
     ;;
     *)
-        echo "Usage: soxy { start | stop | restart | status }"
+        echo "Usage: $0 { start | stop | restart | status }"
     ;;
 esac
