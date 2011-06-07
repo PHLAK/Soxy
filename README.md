@@ -9,6 +9,16 @@ Copy or symlink the `soxy` file to /home/<your_user>/bin/soxy and make sure it's
 executable by running:
 
     chmod +x /home/<your_user>/bin/soxy
+    
+You will also need to generate an RSA key pair with the following command:
+
+    ssh-keygen -t rsa -C "<your_hostname>"
+    
+Once complete run `cat /home/<your_user>/.ssh/id_rsa.pub` and copy the output.
+
+Now log into your proxy server and paste what you just copied into 
+`/home/<server_user>/.ssh/authorized_keys` and make sure the `authorized_keys`
+files permissions are `600`.
 
 
 Usage
@@ -29,6 +39,18 @@ Usage
 **Get the status of the SOCKS connection**
     
     soxy status
+    
+
+Run on startup
+--------------
+
+You can configure Soxy to start at boot by adding it to Startup Applications in 
+Gnome.  Navigate to `System -> Preferences -> Startup Applications` and click
+the Add button.  Give this a name, anything will do, then for Command put
+`/home/<your_user>/bin/soxy start` and hit the Add button.
+
+Now, whenever you log in for the first time, Soxy should automatically start a
+SOCKS connectiono for you.    
 
 
 Contact
