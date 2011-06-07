@@ -55,7 +55,7 @@ function startSocks {
         echo "[ $(colorMsg OK $GREEN $BOLD) ]"
     else
         echo "[$(colorMsg FAIL $RED $BOLD $BLACK)]"
-        echo "Socks proxy already running, try restarting"
+        echo "SOCKS proxy already running, try restarting"
     fi
 
 }
