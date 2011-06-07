@@ -3,9 +3,9 @@
 ## SET THESE VARIABLES
 ########################################
 
-REMOTE_USER='root'
-REMOTE_HOST='carbon.bocksystems.com'
-REMOTE_PORT='443'
+REMOTE_USER='User'
+REMOTE_HOST='Hostname'
+REMOTE_PORT='22'
 LOCAL_PORT='8080'
 
 ## SCRIPT VARS, DON'T MODIFY
