@@ -51,7 +51,7 @@ the Add button.  Give this a name, anything will do, then for Command put
 `/home/<your_user>/bin/soxy start` and hit the Add button.
 
 Now, whenever you log in for the first time, Soxy should automatically start a
-SOCKS connectiono for you.    
+SOCKS connection for you.    
 
 
 Contact
