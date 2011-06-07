@@ -3,16 +3,16 @@
 ## SET THESE VARIABLES
 ########################################
 
-REMOTE_USER='User'
-REMOTE_HOST='Hostname'
+REMOTE_USER='USER'
+REMOTE_HOST='HOSTNAME'
 REMOTE_PORT='22'
-LOCAL_PORT='8080'
+
+LOCAL_PORT='1080'
 
 ## SCRIPT VARS, DON'T MODIFY
 ########################################
 
 LOCK_FILE=/tmp/soxy.lock
-LOG_FILE=/tmp/soxy.log
 
 ## FUNCTIONS
 ########################################
@@ -31,17 +31,17 @@ function startSocks {
         
     if [ ! -f $LOCK_FILE ]; then
         # Establish SOCKS connection
-        ssh -qfCD 8080 $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N & > /dev/null 2>&1
+        ssh -qfCD $LOCAL_PORT $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N & > /dev/null 2>&1
             
         # Create the lock file
         touch $LOCK_FILE
-
+        
+        # Echo status message to console
+        echo "DONE!"
     else
         echo "Socks proxy already running, try restarting"
     fi
 
-    # Echo status message to console
-    echo "Proxy started"
 }
 
 function stopSocks {
@@ -57,7 +57,7 @@ function stopSocks {
     fi
     
     # Echo status message to console
-    echo "Proxy stopped"
+    echo "DONE!"
 }
 
 
