@@ -28,7 +28,6 @@ NONE="0"
 BOLD="1"
 UNDERLINE="4"
 
-
 ## FUNCTIONS
 ########################################
 
@@ -42,7 +41,7 @@ function getPid {
 
 function startSocks {
     # Echo status message to console
-    echo -n "Starting SOCKS proxy on port ${LOCAL_PORT}    "
+    printf "Starting SOCKS proxy on port %-6s    " $LOCAL_PORT
         
     if [ ! -f $LOCK_FILE ]; then
         # Establish SOCKS connection
@@ -62,7 +61,7 @@ function startSocks {
 
 function stopSocks {
     # Echo status message to console
-    echo -n "Stopping SOCKS proxy                 "
+    printf "Stopping SOCKS proxy with PID %-6s   " $(getPid)
         
     # Kill the process
     kill $(getPid) > /dev/null 2>&1
@@ -90,7 +89,6 @@ function colorMsg {
     return
 }
 
-
 ## SWITCHES
 ########################################
 
@@ -113,6 +111,6 @@ case $1 in
         fi
     ;;
     *)
-        echo "Usage: $0 { start | stop | restart | status }"
+        echo "Usage: soxy { start | stop | restart | status }"
     ;;
 esac
