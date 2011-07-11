@@ -22,9 +22,31 @@ Now log into your proxy server and paste what you just copied into
 file permissions are set to `600`.
 
 
+Client Setup
+------------
+After completing the "Installation" steps, start the SOCKS connectsion with the
+following command:
+
+    soxy start
+
+From a Gnome environment, navigate to System -> Preferences -> Network Proxy.
+From here, select _Manual proxy configuration_. For _Socks host_ enter
+`localhost`, and enter the port you used (default is `1080`).
+
+
+Run on startup
+--------------
+You can configure Soxy to start at boot by adding it to Startup Applications in 
+Gnome.  Navigate to `System -> Preferences -> Startup Applications` and click
+the Add button.  Give this a name, anything will do, then for Command put
+`/home/<your_user>/bin/soxy start` and hit the Add button.
+
+Now, whenever you log in for the first time, Soxy should automatically start a
+SOCKS connection for you.    
+
+
 Usage
 -----
-
 **Start the SOCKS connection**
 
     soxy start
@@ -40,18 +62,6 @@ Usage
 **Get the status of the SOCKS connection**
     
     soxy status
-    
-
-Run on startup
---------------
-
-You can configure Soxy to start at boot by adding it to Startup Applications in 
-Gnome.  Navigate to `System -> Preferences -> Startup Applications` and click
-the Add button.  Give this a name, anything will do, then for Command put
-`/home/<your_user>/bin/soxy start` and hit the Add button.
-
-Now, whenever you log in for the first time, Soxy should automatically start a
-SOCKS connection for you.    
 
 
 Contact
