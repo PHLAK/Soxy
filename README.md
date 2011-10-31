@@ -45,12 +45,12 @@ From here, select _Manual proxy configuration_. For _Socks host_ enter
 `localhost`, and enter the port you used (default is `1080`).
 
 
-Run on startup (Gnome)
+Run on Start Up (Gnome)
 ----------------------
 You can configure Soxy to start at boot by adding it to Startup Applications in 
 Gnome.  Navigate to `System -> Preferences -> Startup Applications` and click
 the Add button.  Give this a name, anything will do, then for Command put
-`/home/<your_user>/bin/soxy start` and hit the Add button.
+`/path/to/soxy start` and hit the Add button.
 
 Now, whenever you log in for the first time, Soxy should automatically start a
 SOCKS connection for you.
