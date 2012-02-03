@@ -1,6 +1,7 @@
 Soxy - Quick and easy SOCKS proxy managment
 ===========================================
-Created by, [Chris Kankiewicz](http://www.ChrisKankiewicz.com) & [Charles Bock](http://www.blastwavelabs.com)
+Created by, [Chris Kankiewicz](http://www.ChrisKankiewicz.com)
+& [Charles Bock](http://www.blastwavelabs.com)
 
 
 Installation
@@ -39,10 +40,24 @@ After completing the "Installation" steps, start the SOCKS connectsion with the
 following command:
 
     soxy start
+    
+### Gnome
 
 From a Gnome environment, navigate to System -> Preferences -> Network Proxy.
 From here, select _Manual proxy configuration_. For _Socks host_ enter
 `localhost`, and enter the port you used (default is `1080`).
+
+### Firefox
+
+From the Firefox menu navigate to Preferences -> Advanced -> Network (tab) then
+under the Connection heading click on the Settings button. In the menu that pops
+up select _Manual proxy configuration_. Now set the _SOCKS Host_ to `localhost`
+and the coresponding _Port_ to the port you specified (default is `1080`).
+
+### Chrome
+
+Chrome does not currently have a way to configure specific proxy setting but
+will use the system proxy settings instead.
 
 
 Run on Start Up (Gnome)
@@ -77,9 +92,11 @@ Usage
 
 Contact
 -------
-If you have any questions or comments, please email me at: [Chris@ChrisKankiewicz.com](mailto:Chris@ChrisKankiewicz.com)
+If you have any questions or comments, please email me at:
+[Chris@ChrisKankiewicz.com](mailto:Chris@ChrisKankiewicz.com)
 
-To report a bug, visit the issue tracker on Github at: https://github.com/PHLAK/Soxy/issues
+To report a bug, visit the issue tracker on Github at:
+https://github.com/PHLAK/Soxy/issues
 
 
 License
