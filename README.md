@@ -38,7 +38,7 @@ Now copy your public key to the remote host with the following command:
 
     ssh-copy-id user@example.com
     
-You can now start the SOCKS proxy connectsion with the following command:
+You can now start the SOCKS proxy connection with the following command:
 
     soxy start
 
