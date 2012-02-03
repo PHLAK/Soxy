@@ -59,6 +59,14 @@ under the _Connection_ heading click on the _Settings_ button. In the menu that 
 up select _Manual proxy configuration_. Now set the _SOCKS Host_ to `localhost`
 and the coresponding _Port_ to the port you specified (default is `1080`).
 
+Additionally, you can enable DNS request proxying in Firefox as well.  To do so
+enter `about:config` into the address bar and hit go.  If you get a warning
+about voiding your warranty don't panic, simply hit the _I'll be carful, I
+promise!_ button to continue.  Now enter `network.proxy.socks_remote_dns` into
+the _Filter_ input box and double click the coresponding result to change the
+_Value_ from `flase` to `true`.
+
+
 ### Chrome
 
 Chrome does not currently have a way to configure specific proxy setting but
