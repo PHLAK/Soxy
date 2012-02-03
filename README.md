@@ -1,6 +1,6 @@
 Soxy - Quick and easy SOCKS proxy managment
 ===========================================
-Created by, `[Chris Kankiewicz](http://www.ChrisKankiewicz.com)
+Created by, [Chris Kankiewicz](http://www.ChrisKankiewicz.com)
 & [Charles Bock](http://www.blastwavelabs.com)
 
 
