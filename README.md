@@ -1,11 +1,12 @@
 Soxy - Quick and easy SOCKS proxy managment
 ===========================================
-Created by, [Chris Kankiewicz](http://www.ChrisKankiewicz.com)
+Created by, `[Chris Kankiewicz](http://www.ChrisKankiewicz.com)
 & [Charles Bock](http://www.blastwavelabs.com)
 
 
-Installation
-------------
+Configuration
+-------------
+
 Download Soxy and extract the `soxy` file to your machine.
 
 Open the `soxy` file and edit the following lines for your configuration:
@@ -15,10 +16,14 @@ Open the `soxy` file and edit the following lines for your configuration:
     REMOTE_PORT='22'
     
     LOCAL_PORT='1080'
-
+    
 Make the `soxy` file executable by running:
 
     chmod +x /path/to/soxy
+
+
+Installation
+------------
 
 Add a bash alias by adding the following to `~/.bash_aliases`:
 
@@ -50,7 +55,7 @@ From here, select _Manual proxy configuration_. For _Socks host_ enter
 ### Firefox
 
 From the Firefox menu navigate to Preferences -> Advanced -> Network (tab) then
-under the Connection heading click on the Settings button. In the menu that pops
+under the _Connection_ heading click on the _Settings_ button. In the menu that pops
 up select _Manual proxy configuration_. Now set the _SOCKS Host_ to `localhost`
 and the coresponding _Port_ to the port you specified (default is `1080`).
 
