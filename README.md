@@ -37,14 +37,14 @@ following command:
 Now copy your public key to the remote host with the following command:
 
     ssh-copy-id user@example.com
+    
+You can now start the SOCKS proxy connectsion with the following command:
+
+    soxy start
 
 
 Client Setup
 ------------
-After completing the "Installation" steps, start the SOCKS connectsion with the
-following command:
-
-    soxy start
     
 ### Gnome
 
