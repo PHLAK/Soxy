@@ -64,7 +64,7 @@ enter `about:config` into the address bar and hit go.  If you get a warning
 about voiding your warranty don't panic, simply hit the _I'll be carful, I
 promise!_ button to continue.  Now enter `network.proxy.socks_remote_dns` into
 the _Filter_ input box and double click the coresponding result to change the
-_Value_ from `flase` to `true`.
+_Value_ from `false` to `true`.
 
 
 ### Chrome
