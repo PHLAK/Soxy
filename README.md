@@ -9,14 +9,14 @@ Configuration
 
 Download Soxy and extract the `soxy` file to your machine.
 
-Open the `soxy` file and edit the following lines for your configuration:
+Copy the `soxy.config.sample` file to `soxy.config` and edit the following lines for your configuration:
 
     REMOTE_USER='USER'
     REMOTE_HOST='HOSTNAME'
     REMOTE_PORT='22'
-    
+
     LOCAL_PORT='1080'
-    
+
 Make the `soxy` file executable by running:
 
     chmod +x /path/to/soxy
@@ -28,7 +28,7 @@ Installation
 Add a bash alias by adding the following to `~/.bash_aliases`:
 
     alias soxy='/path/to/soxy'
-    
+
 If you haven't already, you will also need to generate an RSA key pair with the
 following command:
 
@@ -37,7 +37,7 @@ following command:
 Now copy your public key to the remote host with the following command:
 
     ssh-copy-id user@example.com
-    
+
 You can now start the SOCKS proxy connection with the following command:
 
     soxy start
@@ -45,12 +45,13 @@ You can now start the SOCKS proxy connection with the following command:
 
 Client Setup
 ------------
-    
-### Gnome
 
-From a Gnome environment, navigate to System -> Preferences -> Network Proxy.
-From here, select _Manual proxy configuration_. For _Socks host_ enter
+### Ubuntu
+
+Navigate to System Settings -> Network. Select _Network proxy_ from the left hand
+menu.  Under the _Method_ drop-down box, select `Manual`.  For _Socks Host_ enter
 `localhost`, and enter the port you used (default is `1080`).
+
 
 ### Firefox
 
@@ -75,7 +76,7 @@ will use the system proxy settings instead.
 
 Run on Start Up (Gnome)
 ----------------------
-You can configure Soxy to start at boot by adding it to Startup Applications in 
+You can configure Soxy to start at boot by adding it to Startup Applications in
 Gnome.  Navigate to `System -> Preferences -> Startup Applications` and click
 the Add button.  Give this a name, anything will do, then for Command put
 `/path/to/soxy start` and hit the Add button.
@@ -89,17 +90,17 @@ Usage
 **Start the SOCKS connection**
 
     soxy start
-    
+
 **Stop the SOCKS connection**
-    
+
     soxy stop
-    
+
 **Restart the SOCKS connection (stops then starts)**
-    
+
     soxy restart
-    
+
 **Get the status of the SOCKS connection**
-    
+
     soxy status
 
 
