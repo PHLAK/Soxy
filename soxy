@@ -1,13 +1,11 @@
 #!/bin/bash
 
-## SET THESE VARIABLES
+script_path=$(dirname $(readlink -f $0))
+
+## LOAD SOXY CONFIG
 ########################################
 
-REMOTE_USER='USER'
-REMOTE_HOST='HOSTNAME'
-REMOTE_PORT='22'
-
-LOCAL_PORT='1080'
+source $script_path/soxy.config
 
 ## SCRIPT VARS, DON'T MODIFY
 ########################################
@@ -16,7 +14,7 @@ LOCK_FILE=/tmp/soxy.lock
 
 ## COLOR & STYLE VARS, DON'T MODIFY
 ########################################
-    
+
 BLACK="30"
 RED="31"
 GREEN="32"
@@ -34,7 +32,7 @@ UNDERLINE="4"
 function getPid {
     # Get the PID
     PID=$(ps ax | grep ssh | grep $LOCAL_PORT | awk '{ print $1 }')
-    
+
     # Return the PID
     echo $PID
 }
@@ -42,14 +40,14 @@ function getPid {
 function startSocks {
     # Echo status message to console
     printf "Starting SOCKS proxy on port %-6s    " $LOCAL_PORT
-        
+
     if [ ! -f $LOCK_FILE ]; then
         # Establish SOCKS connection
         ssh -qfCD $LOCAL_PORT $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N & > /dev/null 2>&1
-            
+
         # Create the lock file
         touch $LOCK_FILE
-        
+
         # Echo status message to console
         echo "[ $(colorMsg OK $GREEN $BOLD) ]"
     else
@@ -62,15 +60,15 @@ function startSocks {
 function stopSocks {
     # Echo status message to console
     printf "Stopping SOCKS proxy with PID %-6s   " $(getPid)
-        
+
     # Kill the process
     kill $(getPid) > /dev/null 2>&1
-    
+
     # Remove the PID file
     if [ -f $LOCK_FILE ]; then
         rm -f $LOCK_FILE
     fi
-    
+
     # Echo status message to console
     echo "[ $(colorMsg OK $GREEN $BOLD) ]"
 }
@@ -78,12 +76,12 @@ function stopSocks {
 function colorMsg {
     # Get the message value
     MESSAGE=$1
-    
+
     # Get the color and style values
     COLOR=${2:-$WHITE}  # Defaults to black, if not specified.
     STYLE=${3:-$NONE}   # Defaults to none, if not specified.
     BG=${4:-$BLACK}  # Defaults to black, if not specified.
-    
+
     # Echo the message with specified colors
     echo -e "\033[$STYLE;$COLOR;40m${MESSAGE}\033[m"
     return
@@ -106,7 +104,7 @@ case $1 in
     'status')
         if [ $(getPid) ]; then
             echo "SOCKS proxy running on port ${LOCAL_PORT} -- PID: $(getPid)"
-        else 
+        else
             echo "SOCKS proxy not currently running"
         fi
     ;;
