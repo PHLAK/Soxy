@@ -9,7 +9,7 @@ Configuration
 
 Download Soxy and extract the `soxy` file to your machine.
 
-Copy the `soxy.config.sample` file to `soxy.config` and edit the following lines for your configuration:
+Copy the provided `config.sample` file to `~/.soxy/config` and edit it for your configuration:
 
     REMOTE_USER='USER'
     REMOTE_HOST='HOSTNAME'
