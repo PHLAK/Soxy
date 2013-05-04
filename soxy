@@ -1,16 +1,12 @@
 #!/bin/bash
 
-script_path=$(dirname $(readlink -f $0))
-
-## LOAD SOXY CONFIG
-########################################
-
-source $script_path/soxy.config
-
 ## SCRIPT VARS, DON'T MODIFY
 ########################################
 
-LOCK_FILE=/tmp/soxy.lock
+SCRIPT_PATH=$(dirname $(readlink -f $0))
+SOXY_DIR=$HOME/.soxy
+SOXY_CONF=$SOXY_DIR/config
+LOCK_FILE="/tmp/soxy.lock"
 
 ## COLOR & STYLE VARS, DON'T MODIFY
 ########################################
@@ -25,6 +21,24 @@ WHITE="37"
 NONE="0"
 BOLD="1"
 UNDERLINE="4"
+
+## CREAT SOXY DIR IF MISSING
+########################################
+
+if [ ! -d $SOXY_DIR ]; then
+    mkdir -p $SOXY_DIR
+fi
+
+## LOAD/COPY SOXY CONFIG
+########################################
+
+if [ ! -r $SOXY_CONF ]; then
+    cp "$SCRIPT_PATH/config.sample" $SOXY_CONF
+    echo "ERROR: Soxy config not found, default config file created at $SOXY_CONF"
+    exit 1
+fi
+
+source $SOXY_CONF
 
 ## FUNCTIONS
 ########################################
