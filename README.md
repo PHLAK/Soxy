@@ -77,7 +77,7 @@ will use the system proxy settings instead.
 Run on Start Up (Ubuntu)
 ------------------------
 You can configure Soxy to start at boot by adding it to Startup Applications in
-Ubuntu.  Navigate to [Gear Icon] -> Startup Applications` and click the Add
+Ubuntu.  Navigate to [Gear Icon] -> Startup Applications and click the Add
 button.  For name enter "Soxy", then for Command put `/your/path/to/soxy start`
 and hit the Add button.
 
