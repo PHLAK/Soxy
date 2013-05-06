@@ -1,8 +1,8 @@
 ## SET THESE VARIABLES
 ########################################
 
-REMOTE_USER='root'
-REMOTE_HOST='ip.phlak.net'
-REMOTE_PORT='2201'
+REMOTE_USER='USER'
+REMOTE_HOST='HOSTNAME'
+REMOTE_PORT='22'
 
 LOCAL_PORT='1080'
