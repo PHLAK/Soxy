@@ -48,9 +48,9 @@ Client Setup
 
 ### Ubuntu
 
-Navigate to System Settings -> Network. Select _Network proxy_ from the left hand
-menu.  Under the _Method_ drop-down box, select `Manual`.  For _Socks Host_ enter
-`localhost`, and enter the port you used (default is `1080`).
+Navigate to [Gear Icon] -> System Settings -> Network. Select _Network proxy_ from
+the left hand menu.  Under the _Method_ drop-down box, select `Manual`.  For
+_Socks Host_ enter `localhost`, and enter the port you used (default is `1080`).
 
 
 ### Firefox
@@ -74,14 +74,14 @@ Chrome does not currently have a way to configure specific proxy setting but
 will use the system proxy settings instead.
 
 
-Run on Start Up (Gnome)
-----------------------
+Run on Start Up (Ubuntu)
+------------------------
 You can configure Soxy to start at boot by adding it to Startup Applications in
-Gnome.  Navigate to `System -> Preferences -> Startup Applications` and click
-the Add button.  Give this a name, anything will do, then for Command put
-`/path/to/soxy start` and hit the Add button.
+Ubuntu.  Navigate to [Gear Icon] -> Startup Applications` and click the Add
+button.  For name enter "Soxy", then for Command put `/your/path/to/soxy start`
+and hit the Add button.
 
-Now, whenever you log in for the first time, Soxy should automatically start a
+Now, whenever you first log into your system, Soxy will automatically start a
 SOCKS connection for you.
 
 
@@ -115,7 +115,7 @@ https://github.com/PHLAK/Soxy/issues
 
 License
 -------
-**Copyright (c) 2012 Chris Kankewicz & Charles Bock**
+**Copyright (c) 2013 Chris Kankewicz & Charles Bock**
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
