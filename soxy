@@ -1,105 +1,109 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 
 ## SCRIPT VARS, DON'T MODIFY
 ########################################
 
-SCRIPT_PATH=$(dirname $(readlink -f $0))
-SOXY_DIR=$HOME/.soxy
-SOXY_CONF=$SOXY_DIR/config
-LOCK_FILE="/tmp/soxy.lock"
+SCRIPT_PATH=$(dirname $(readlink -f ${0}))
+SOXY_DIR=${HOME}/.soxy
+SOXY_CONF=${SOXY_DIR}/config
+PID_FILE="/tmp/soxy.pid"
 
-## COLOR & STYLE VARS, DON'T MODIFY
+
+## LOAD TEXT FORMATTER
 ########################################
 
-BLACK="30"
-RED="31"
-GREEN="32"
-YELLOW="33"
-BLUE="34"
-WHITE="37"
+source format.sh
 
-NONE="0"
-BOLD="1"
-UNDERLINE="4"
 
 ## CREAT SOXY DIR IF MISSING
 ########################################
 
-if [ ! -d $SOXY_DIR ]; then
-    mkdir -p $SOXY_DIR
+if [[ ! -d "${SOXY_DIR}" ]]; then
+    mkdir -p ${SOXY_DIR}
 fi
+
 
 ## LOAD/COPY SOXY CONFIG
 ########################################
 
-if [ ! -r $SOXY_CONF ]; then
-    cp "$SCRIPT_PATH/config.sample" $SOXY_CONF
-    echo "ERROR: Soxy config not found, default config file created at $SOXY_CONF"
+if [[ ! -r "${SOXY_CONF}" ]]; then
+    cp "${SCRIPT_PATH}/config.sample" ${SOXY_CONF}
+    echo "WARNING: Soxy config not found, default config file created at ${SOXY_CONF}"
     exit 1
 fi
 
-source $SOXY_CONF
+source ${SOXY_CONF}
+
 
 ## FUNCTIONS
 ########################################
 
 function getPid {
+
     # Get the PID
-    PID=$(ps ax | grep ssh | grep $LOCAL_PORT | awk '{ print $1 }')
+    PID=$(cat ${PID_FILE})
 
     # Return the PID
-    echo $PID
+    echo ${PID}
+
 }
+
 
 function startSocks {
+
     # Echo status message to console
-    printf "Starting SOCKS proxy on port %-6s    " $LOCAL_PORT
+    printf "Starting SOCKS proxy on port %-6s    " ${LOCAL_PORT}
 
-    if [ ! -f $LOCK_FILE ]; then
+    if [[ ! -f ${PID_FILE} ]]; then
+
         # Establish SOCKS connection
-        ssh -qfCD $LOCAL_PORT $REMOTE_USER@$REMOTE_HOST -p $REMOTE_PORT -N & > /dev/null 2>&1
+        ssh -qfCD ${LOCAL_PORT} ${REMOTE_USER}@${REMOTE_HOST} -p ${REMOTE_PORT} -N & > /dev/null 2>&1
 
-        # Create the lock file
-        touch $LOCK_FILE
+        # Create the PID file
+        echo $! > ${PID_FILE}
 
         # Echo status message to console
-        echo "[ $(colorMsg OK $GREEN $BOLD) ]"
+        echo "[ $(format OK ${GREEN} ${BOLD}) ]"
+
     else
-        echo "[$(colorMsg FAIL $RED $BOLD $BLACK)]"
+
+        echo "[$(format FAIL ${RED} ${BOLD} ${BLACK})]"
         echo "SOCKS proxy already running, try restarting"
+
     fi
 
 }
+
 
 function stopSocks {
+
     # Echo status message to console
-    printf "Stopping SOCKS proxy with PID %-6s   " $(getPid)
+    printf "Stopping SOCKS proxy on port %-6s    " ${LOCAL_PORT}
 
-    # Kill the process
-    kill $(getPid) > /dev/null 2>&1
+    if [[ -z "$(getPid)" ]]; then
 
-    # Remove the PID file
-    if [ -f $LOCK_FILE ]; then
-        rm -f $LOCK_FILE
+
+        # Kill the process
+        kill $(getPid) > /dev/null 2>&1
+
+        # Remove the PID file
+        if [[ -f ${PID_FILE} ]]; then
+            rm -f ${PID_FILE}
+        fi
+
+        # Echo status message to console
+        echo "[ $(format OK ${GREEN} ${BOLD}) ]"
+
+    else
+
+        echo "[$(format FAIL ${RED} ${BOLD} ${BLACK})]"
+        echo "SOCKS proxy already running, try restarting"
+
     fi
 
-    # Echo status message to console
-    echo "[ $(colorMsg OK $GREEN $BOLD) ]"
 }
 
-function colorMsg {
-    # Get the message value
-    MESSAGE=$1
-
-    # Get the color and style values
-    COLOR=${2:-$WHITE}  # Defaults to black, if not specified.
-    STYLE=${3:-$NONE}   # Defaults to none, if not specified.
-    BG=${4:-$BLACK}  # Defaults to black, if not specified.
-
-    # Echo the message with specified colors
-    echo -e "\033[$STYLE;$COLOR;40m${MESSAGE}\033[m"
-    return
-}
 
 ## SWITCHES
 ########################################
