@@ -13,7 +13,7 @@ PID_FILE="/tmp/soxy.pid"
 ## LOAD TEXT FORMATTER
 ########################################
 
-source format.sh
+source ${SCRIPT_PATH}/format.sh
 
 
 ## CREAT SOXY DIR IF MISSING
@@ -41,8 +41,13 @@ source ${SOXY_CONF}
 
 function getPid {
 
-    # Get the PID
-    PID=$(cat ${PID_FILE})
+    # Check if PID file exists
+    if [[ -e "${PID_FILE}" ]]; then
+
+        # Get the PID
+        PID=$(cat ${PID_FILE})
+
+    fi
 
     # Return the PID
     echo ${PID}
@@ -53,7 +58,7 @@ function getPid {
 function startSocks {
 
     # Echo status message to console
-    printf "Starting SOCKS proxy on port %-6s    " ${LOCAL_PORT}
+    printf "Starting Soxy proxy on port %-6s    " ${LOCAL_PORT}
 
     if [[ ! -f ${PID_FILE} ]]; then
 
@@ -69,7 +74,7 @@ function startSocks {
     else
 
         echo "[$(format FAIL ${RED} ${BOLD} ${BLACK})]"
-        echo "SOCKS proxy already running, try restarting"
+        echo "Soxy already running, try restarting"
 
     fi
 
@@ -79,10 +84,9 @@ function startSocks {
 function stopSocks {
 
     # Echo status message to console
-    printf "Stopping SOCKS proxy on port %-6s    " ${LOCAL_PORT}
+    printf "Stopping Soxy proxy on port %-6s    " ${LOCAL_PORT}
 
-    if [[ -z "$(getPid)" ]]; then
-
+    if [[ ! -z "$(getPid)" ]]; then
 
         # Kill the process
         kill $(getPid) > /dev/null 2>&1
@@ -98,7 +102,7 @@ function stopSocks {
     else
 
         echo "[$(format FAIL ${RED} ${BOLD} ${BLACK})]"
-        echo "SOCKS proxy already running, try restarting"
+        echo "No running Soxy process found"
 
     fi
 
@@ -108,25 +112,31 @@ function stopSocks {
 ## SWITCHES
 ########################################
 
-case $1 in
+case ${1} in
+
     'start')
         startSocks
     ;;
+
     'stop')
         stopSocks
     ;;
+
     'restart')
         stopSocks
         startSocks
     ;;
+
     'status')
-        if [ $(getPid) ]; then
-            echo "SOCKS proxy running on port ${LOCAL_PORT} -- PID: $(getPid)"
+        if [[ ! -z "$(getPid)" ]]; then
+            echo "Soxy proxy running on port ${LOCAL_PORT} -- PID: $(getPid)"
         else
-            echo "SOCKS proxy not currently running"
+            echo "No Soxy proxy currently running"
         fi
     ;;
+
     *)
-        echo "Usage: soxy { start | stop | restart | status }"
+        echo "Usage: $(basename ${0}) { start | stop | restart | status }"
     ;;
+
 esac
