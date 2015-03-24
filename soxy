@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
+set -o errexit -o pipefail
 
 
 ## SCRIPT VARS, DON'T MODIFY
 ########################################
 
-SCRIPT_PATH=$(dirname $(readlink -f ${0}))
-SOXY_DIR=${HOME}/.soxy
-SOXY_CONF=${SOXY_DIR}/config
-PID_FILE="/tmp/soxy.pid"
+SCRIPT_PATH="$(dirname $(readlink -f ${0}))"
+SOXY_DIR="${HOME}/.soxy"
+SOXY_CONF="${SOXY_DIR}/config"
 
 
 ## LOAD TEXT FORMATTER
@@ -41,13 +41,8 @@ source ${SOXY_CONF}
 
 function getPid {
 
-    # Check if PID file exists
-    if [[ -e "${PID_FILE}" ]]; then
-
-        # Get the PID
-        PID=$(cat ${PID_FILE})
-
-    fi
+    # Get the PID
+    PID="$(ps ax | grep ssh | grep ${LOCAL_PORT} | awk '{ print $1 }')"
 
     # Return the PID
     echo ${PID}
@@ -60,13 +55,10 @@ function startSocks {
     # Echo status message to console
     printf "Starting Soxy proxy on port %-6s    " ${LOCAL_PORT}
 
-    if [[ ! -f ${PID_FILE} ]]; then
+    if [[ -z "$(getPid)" ]]; then
 
         # Establish SOCKS connection
         ssh -qfCD ${LOCAL_PORT} ${REMOTE_USER}@${REMOTE_HOST} -p ${REMOTE_PORT} -N & > /dev/null 2>&1
-
-        # Create the PID file
-        echo $! > ${PID_FILE}
 
         # Echo status message to console
         echo "[ $(format OK ${GREEN} ${BOLD}) ]"
@@ -90,11 +82,6 @@ function stopSocks {
 
         # Kill the process
         kill $(getPid) > /dev/null 2>&1
-
-        # Remove the PID file
-        if [[ -f ${PID_FILE} ]]; then
-            rm -f ${PID_FILE}
-        fi
 
         # Echo status message to console
         echo "[ $(format OK ${GREEN} ${BOLD}) ]"
