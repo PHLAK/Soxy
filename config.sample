@@ -1,5 +1,5 @@
 # CONFIG PARAMETERS
-# location of this file should be: ${HOME}/.soxy/soxy.conf
+# location of this file should be: ~/.soxy/config
 
 REMOTE_USER=your_username
 REMOTE_HOST=target_hostname
