@@ -1,129 +1,150 @@
-#!/usr/bin/env bash
-set -o errexit -o pipefail
+#!/bin/bash
 
+#set -x
 
-## SCRIPT VARS, DON'T MODIFY
+## SCRIPT VARS
 ########################################
 
 SCRIPT_PATH="$(dirname $(readlink -f ${0}))"
 SOXY_DIR="${HOME}/.soxy"
 SOXY_CONF="${SOXY_DIR}/config"
+PID_FILE="${SOXY_DIR}/soxy.pid"
+SOXY_LOG="${SOXY_DIR}/soxy.log"
+BASENAME=`basename "$0"`
 
+function format {
+  echo -e "$1"
+}
 
-## LOAD TEXT FORMATTER
-########################################
-
-source ${SCRIPT_PATH}/format.sh
-
-
-## CREAT SOXY DIR IF MISSING
-########################################
-
-if [[ ! -d "${SOXY_DIR}" ]]; then
-    mkdir -p ${SOXY_DIR}
+# LOAD TEXT FORMATTER IF ITS A TERMINAL
+if [ -t 1 ] ; then
+  if [ -f "${SCRIPT_PATH}/format.sh" ]; then
+    source ${SCRIPT_PATH}/format.sh
+  else
+    echo "${SCRIPT_PATH}/format.sh not found... omitting color output"
+  fi
 fi
 
+# CREAT SOXY DIR IF MISSING
+if [[ ! -d "${SOXY_DIR}" ]]; then
+  mkdir -p ${SOXY_DIR}
+fi
 
-## LOAD/COPY SOXY CONFIG
-########################################
-
+# LOAD/COPY SOXY CONFIG
 if [[ ! -r "${SOXY_CONF}" ]]; then
-    cp "${SCRIPT_PATH}/config.sample" ${SOXY_CONF}
-    echo "WARNING: Soxy config not found, default config file created at ${SOXY_CONF}"
-    exit 1
+  cp "${SCRIPT_PATH}/config.sample" ${SOXY_CONF}
+  echo "WARNING: soxy config not found, default config file created at ${SOXY_CONF}"
+  exit 1
 fi
 
 source ${SOXY_CONF}
 
-
-## FUNCTIONS
-########################################
+function soxylog() {
+  local curMsg="$1"
+  local timestamp=$(date +%Y-%m-%d\ %H:%M:%S)
+  timestamp+="  -  "
+  timestamp+="$curMsg"
+  echo "$timestamp" | tee -a "${SOXY_LOG}"
+}
 
 function getPid {
-
-    # Get the PID
-    PID="$(ps ax | grep ssh | grep ${LOCAL_PORT} | awk '{ print $1 }')"
-
-    # Return the PID
-    echo ${PID}
-
+  # Check if PID file exists
+  if [[ -e ${PID_FILE} ]]; then
+    local pid=$(cat ${PID_FILE})
+  fi
+  # Return the PID
+  echo ${pid}
 }
 
 
 function startSocks {
+  # Echo status message to console
+  soxylog "soxy starting on port ${LOCAL_PORT}..."
 
-    # Echo status message to console
-    printf "Starting Soxy proxy on port %-6s    " ${LOCAL_PORT}
+  if [[ ! -f ${PID_FILE} ]]; then
+    # Establish SOCKS connection
+    ssh -qfCD ${LOCAL_PORT} ${REMOTE_USER}@${REMOTE_HOST} -p ${REMOTE_PORT} -N &>/dev/null
 
-    if [[ -z "$(getPid)" ]]; then
+    # Create the PID file
+    pgrep -f "ssh -qfCD ${LOCAL_PORT} ${REMOTE_USER}@${REMOTE_HOST}" > ${PID_FILE}
 
-        # Establish SOCKS connection
-        ssh -qfCD ${LOCAL_PORT} ${REMOTE_USER}@${REMOTE_HOST} -p ${REMOTE_PORT} -N & > /dev/null 2>&1
-
-        # Echo status message to console
-        echo "[ $(format OK ${GREEN} ${BOLD}) ]"
-
-    else
-
-        echo "[$(format FAIL ${RED} ${BOLD} ${BLACK})]"
-        echo "Soxy already running, try restarting"
-
-    fi
-
+    soxylog " |----------------------------------------- [$(format OK ${GREEN} ${BOLD})]"
+  else
+    soxylog " |--------------------------------------- [$(format FAIL ${RED} ${BOLD} ${BLACK})]"
+    soxylog "soxy already running!"
+  fi
 }
 
+function killSocks {
+  #kill $(cat "$PID_FILE")
+  # just to be sure we use pkill
+  pkill -f "ssh -qfCD ${LOCAL_PORT} ${REMOTE_USER}@${REMOTE_HOST}" &>/dev/null
+  rm -f "$PID_FILE"
+}
 
 function stopSocks {
-
-    # Echo status message to console
-    printf "Stopping Soxy proxy on port %-6s    " ${LOCAL_PORT}
-
-    if [[ ! -z "$(getPid)" ]]; then
-
-        # Kill the process
-        kill $(getPid) > /dev/null 2>&1
-
-        # Echo status message to console
-        echo "[ $(format OK ${GREEN} ${BOLD}) ]"
-
-    else
-
-        echo "[$(format FAIL ${RED} ${BOLD} ${BLACK})]"
-        echo "No running Soxy process found"
-
-    fi
-
+  # Echo status message to console
+  soxylog "soxy will be stopped..."
+  if [[ ! -z $(getPid) ]]; then
+    killSocks
+    soxylog " |----------------------------------------- [$(format OK ${GREEN} ${BOLD})]"
+  else
+    soxylog " |--------------------------------------- [$(format FAIL ${RED} ${BOLD} ${BLACK})]"
+    soxylog "soxy is not running!"
+  fi
 }
 
+function restartSocks {
+  killSocks
+  sleep 1
+  startSocks
+}
+
+function getStatus {
+  pgrep -f "ssh -qfCD ${LOCAL_PORT} ${REMOTE_USER}@${REMOTE_HOST}" &>/dev/null
+  if [ $? -ne 0 ]; then
+    # its gone - we can delete the pid file
+    rm -f "$PID_FILE"
+    if [[ "$AUTO_RECONNECT" = true ]] || [[ "$AUTO_RECONNECT" -gt 0 ]]; then
+      soxylog "AUTO_RECONNECT is true. Trying to restart..."
+      restartSocks
+    else
+      soxylog "soxy is not running!"
+      soxylog " |------------------------------------ [$(format OFFLINE ${RED} ${BOLD} ${BLACK})]"
+      soxylog "You can set AUTO_RECONNECT=true in your $SOXY_CONF file."
+      soxylog "This is handy in case you want to check & restart soxy with a cron job."
+      exit 1
+    fi
+  else
+    soxylog "soxy running on port ${LOCAL_PORT} (PID $(getPid))"
+    soxylog " |------------------------------------- [$(format ONLINE ${GREEN} ${BOLD})]"
+    exit 0
+  fi
+}
 
 ## SWITCHES
 ########################################
 
 case ${1} in
 
-    'start')
-        startSocks
-    ;;
+  'start')
+    startSocks
+  ;;
 
-    'stop')
-        stopSocks
-    ;;
+  'stop')
+    stopSocks
+  ;;
 
-    'restart')
-        stopSocks
-        startSocks
-    ;;
+  'restart')
+    restartSocks
+  ;;
 
-    'status')
-        if [[ ! -z "$(getPid)" ]]; then
-            echo "Soxy proxy running on port ${LOCAL_PORT} -- PID: $(getPid)"
-        else
-            echo "No Soxy proxy currently running"
-        fi
-    ;;
+  'status')
+    getStatus
+  ;;
 
-    *)
-        echo "Usage: $(basename ${0}) { start | stop | restart | status }"
-    ;;
+  *)
+    echo "Usage: $BASENAME { start | stop | restart | status }"
+  ;;
 
 esac

@@ -1,8 +1,15 @@
-## SET THESE VARIABLES
-########################################
+# CONFIG PARAMETERS
+# location of this file should be: ${HOME}/.soxy/soxy.conf
 
-REMOTE_USER='USER'
-REMOTE_HOST='HOSTNAME'
-REMOTE_PORT='22'
+REMOTE_USER=your_username
+REMOTE_HOST=target_hostname
+REMOTE_PORT=22
 
-LOCAL_PORT='1080'
+LOCAL_PORT=1080
+
+# AUTO_RECONNECT
+# if set to true the script will atempt to restart the
+# connection each time you execute 'soxy status' (useful
+# in connection with a cron job to make sure you stay connected)
+
+AUTO_RECONNECT=false

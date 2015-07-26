@@ -11,11 +11,13 @@ Download Soxy and extract the `soxy` file to your machine.
 
 Copy the provided `config.sample` file to `~/.soxy/config` and edit it for your configuration:
 
-    REMOTE_USER='USER'
-    REMOTE_HOST='HOSTNAME'
-    REMOTE_PORT='22'
+    REMOTE_USER=your_username
+    REMOTE_HOST=target_hostname
+    REMOTE_PORT=22
 
-    LOCAL_PORT='1080'
+    LOCAL_PORT=1080
+
+    AUTO_RECONNECT=false
 
 Make the `soxy` file executable by running:
 
@@ -70,8 +72,10 @@ _Value_ from `false` to `true`.
 
 ### Chrome
 
-Chrome does not currently have a way to configure specific proxy setting but
-will use the system proxy settings instead.
+You can use this great Plugin: [Proxy SwitchyOmega](https://chrome.google.com/webstore/detail/proxy-switchyomega/padekgcemlokbadohgkifijomclgjgif)
+
+It's also possible to define black/white lists based on URL patterns and
+control exactly which route should be used (multiple proxies possible + direct).
 
 
 Run on Start Up (Ubuntu)
@@ -83,6 +87,22 @@ and hit the Add button.
 
 Now, whenever you first log into your system, Soxy will automatically start a
 SOCKS connection for you.
+
+
+Configure a cron job to check the connection perodically (and reconnect
+if possible)
+-----------------------------------------------------------------------
+User cron jobs can be defined with `crontab -e` on most linux distributions. A
+possible setup could look like this:
+
+  ## run every 10 minutes
+  */10 * * * * soxy status
+
+Make sure the script is in your `$PATH` or specify the path in the cron job.
+
+If you want the script to attempt a re-connect as soon as the `soxy status`
+tells you that the connection is gone, you can set `AUTO_RECONNECT=true` in
+your `~/.soxy/config`.
 
 
 Usage
@@ -134,4 +154,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
