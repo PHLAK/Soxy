@@ -1,4 +1,4 @@
-Soxy - Quick and easy SOCKS proxy managment
+Soxy - Quick and easy SOCKS proxy management
 ===========================================
 Created by, [Chris Kankiewicz](http://www.ChrisKankiewicz.com)
 & [Charles Bock](http://www.blastwavelabs.com)
@@ -60,13 +60,13 @@ _Socks Host_ enter `localhost`, and enter the port you used (default is `1080`).
 From the Firefox menu navigate to Preferences -> Advanced -> Network (tab) then
 under the _Connection_ heading click on the _Settings_ button. In the menu that pops
 up select _Manual proxy configuration_. Now set the _SOCKS Host_ to `localhost`
-and the coresponding _Port_ to the port you specified (default is `1080`).
+and the corresponding _Port_ to the port you specified (default is `1080`).
 
 Additionally, you can enable DNS request proxying in Firefox as well.  To do so
 enter `about:config` into the address bar and hit go.  If you get a warning
-about voiding your warranty don't panic, simply hit the _I'll be carful, I
+about voiding your warranty don't panic, simply hit the _I'll be careful, I
 promise!_ button to continue.  Now enter `network.proxy.socks_remote_dns` into
-the _Filter_ input box and double click the coresponding result to change the
+the _Filter_ input box and double click the corresponding result to change the
 _Value_ from `false` to `true`.
 
 
@@ -89,15 +89,14 @@ Now, whenever you first log into your system, Soxy will automatically start a
 SOCKS connection for you.
 
 
-Configure a cron job to check the connection perodically (and reconnect
-if possible)
------------------------------------------------------------------------
+Cron job to check the connection periodically and re-connect
+-----------------------------------------------------------
 User cron jobs can be defined with `crontab -e` on most linux distributions. A
 possible setup could look like this:
-
+````
   ## run every 10 minutes
   */10 * * * * soxy status
-
+````
 Make sure the script is in your `$PATH` or specify the path in the cron job.
 
 If you want the script to attempt a re-connect as soon as the `soxy status`
@@ -119,7 +118,7 @@ Usage
 
     soxy restart
 
-**Get the status of the SOCKS connection**
+**Get the status of the SOCKS connection (and try to re-connect if `AUTO_RECONNECT=true`)**
 
     soxy status
 
